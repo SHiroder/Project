@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $input3 = $_POST['input3'];
   $input4 = $_POST['input4'];
   $input5 = "Home base";
-  $input6 = $_POST['input6'];
+
 
   $servername = "localhost";
   $username = "root";
@@ -20,8 +20,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 
   // ใช้ parameterized query
-  $stmt = $conn->prepare("INSERT INTO room (input1, input2, input3, input4, input5, input6) VALUES (?, ?, ?, ?, ?, ?)");
-  $stmt->bind_param("ssssss", $input1, $input2, $input3, $input4, $input5, $input6);
+  $stmt = $conn->prepare("INSERT INTO room (input1) VALUES (?)");
+  $stmt->bind_param("ssssss", $input1);
+  $stmt = $conn->prepare("INSERT INTO room (input2) VALUES (?)");
+  $stmt->bind_param("ssssss", $input2);
+  $stmt = $conn->prepare("INSERT INTO room (input3) VALUES (?)");
+  $stmt->bind_param("ssssss", $input3);
+  $stmt = $conn->prepare("INSERT INTO room (input4) VALUES (?)");
+  $stmt->bind_param("ssssss", $input4);
+  $stmt = $conn->prepare("INSERT INTO room (input5) VALUES (?)");
+  $stmt->bind_param("ssssss", $input5);
+  $temiID = 1;
+  $stmt = $conn->prepare("INSERT INTO temi_location (Temi_ID, Status_success) VALUES (?, 'IDLE')");
+  $stmt->bind_param("i", $temiID);
+  $stmt = $conn->prepare("INSERT INTO temi_location (Temi_ID, Status_success) VALUES (?, 'IDLE')");
+  $stmt->bind_param("i", $temiID);
+  $stmt = $conn->prepare("INSERT INTO temi_location (Temi_ID, Status_success) VALUES (?, 'IDLE')");
+  $stmt->bind_param("i", $temiID);
+  $stmt = $conn->prepare("INSERT INTO temi_location (Temi_ID, Status_success) VALUES (?, 'IDLE')");
+  $stmt->bind_param("i", $temiID);
+  $stmt = $conn->prepare("INSERT INTO temi_location (Temi_ID, Status_success) VALUES (?, 'IDLE')");
+  $stmt->bind_param("i", $temiID);
+
+
+  
 
   if ($stmt->execute() === TRUE) {
     echo "New record created successfully";

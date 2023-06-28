@@ -2,7 +2,6 @@
 
 $id = $_GET['ID'];
 $status = $_GET['Status_Onoff'];
-
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -20,7 +19,7 @@ $sql = "UPDATE healthbox SET Status_Onoff='$status' WHERE ID=$id";
 if ($conn->query($sql) === TRUE) {
   echo "Record updated successfully";
 
-  sleep(5);
+  sleep(10);
   $status2 = "Off";
   $sql2 = "UPDATE healthbox SET Status_Onoff='$status2' WHERE ID=$id";
   if ($conn->query($sql2) === TRUE) {

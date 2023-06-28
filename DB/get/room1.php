@@ -15,7 +15,7 @@ if(isset($_GET['ID'])){
 }
 
 //เลือกข้อมูลจากตารางของฐานข้อมูล
-$result = mysqli_query($conn, "SELECT * FROM room WHERE ID = ".$id);
+$result = mysqli_query($conn, "SELECT * FROM patient INNER JOIN room ON patient.Room_ID_p = room.ID WHERE patient.switch_status = 1 AND patient.IDp = " . $id);
 
 //นำข้อมูลออกมาเป็น JSON Array
 $data = array();

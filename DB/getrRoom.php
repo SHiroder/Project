@@ -13,7 +13,7 @@
     header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
     
     //ตั้งค่าการเชื่อมต่อฐานข้อมูล
-    $link = mysqli_connect('localhost', 'root', 'Buen1916', 'registor');
+    $link = mysqli_connect('localhost', 'root', '', 'registor');
  
     mysqli_set_charset($link, 'utf8');
     
@@ -22,23 +22,16 @@
     //ตรวจสอบหากใช้ Method GET
     if($requestMethod == 'GET'){
         //ตรวจสอบการส่งค่า id
-        if(isset($_GET['id']) && !empty($_GET['id'])){
+        if(isset($_GET['ID']) && !empty($_GET['ID'])){
             
-            $id = $_GET['id'];
+            $ID = $_GET['ID'];
             
-            //คำสั่ง SQL กรณี มีการส่งค่า id มาให้แสดงเฉพาะข้อมูลของ id นั้น
-            $sql = "SELECT Room_bed FROM room WHERE id = $id";
-            
-        }else if(isset($_GET['Room_bed']) && !empty($_GET['Room_bed'])){
-            
-            $Room_bed = $_GET['Room_bed'];
-            
-            //คำสั่ง SQL กรณี มีการส่งค่า Room_bed มาให้แสดงเฉพาะข้อมูลของ Room_bed นั้น
-            $sql = "SELECT Room_bed FROM room WHERE Room_bed = $Room_bed";
+            //คำสั่ง SQL กรณี มีการส่งค่า ID มาให้แสดงเฉพาะข้อมูลของ ID นั้น
+            $sql = "SELECT * FROM room WHERE ID = $ID";
             
         }else{
             //คำสั่ง SQL แสดงข้อมูลทั้งหมด
-            $sql = "SELECT Room_bed FROM room";
+            $sql = "SELECT * FROM room";
         }
         
         $result = mysqli_query($link, $sql);

@@ -28,18 +28,22 @@ if (isset($_POST['signin'])) {
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
                 if (password_verify($password, $row['Password'])) {
-                    if ($row['User_role'] == 'nurse') {
-                        session_start();
-                        $_SESSION['nurse_login'] = $row['ID'];
-                        echo '<script> alert("Login successed")</script>';
-                        header("location: nurse.php");
-                        exit();
-                    } else {
-                        $_SESSION['error'] = 'Invalid user role';
-                        echo '<script> alert("Invalid user role")</script>';
-                        header("location: index.php");
-                        exit();
-                    }
+                   // if ($row['Hospital_ID']== $row['Hopitalname']){
+                        if ($row['User_role'] == 'nurse') {
+                            session_start();
+                            $_SESSION['nurse_login'] = $row['ID'];
+                            echo '<script> alert("Login successed")</script>';
+                            header("location: nurse.php");
+                            exit();
+                        } else {
+                            $_SESSION['error'] = 'Invalid user role';
+                            echo '<script> alert("Invalid user role")</script>';
+                            header("location: index.php");
+                            exit();
+                        }
+                   // }else{
+                       // echo '<script> alert("Invalid hopital")</script>';
+                    //}
                 } else {
                     $_SESSION['error'] = 'Invalid password';
                     echo '<script> alert("Invalid password")</script>';

@@ -5,7 +5,7 @@
 
     if(isset($_REQUEST['edit_id'])){
         $id = $_REQUEST['edit_id'];
-        $select_stmt = $conn->prepare("SELECT * FROM patient WHERE ID = ?");
+        $select_stmt = $conn->prepare("SELECT * FROM patient WHERE IDp = ?");
         $select_stmt->bind_param('i', $id);
         $select_stmt->execute();
         $result = $select_stmt->get_result();
@@ -14,7 +14,7 @@
 
     if(isset($_REQUEST['btn_update'])) {
         try {
-            $id = $_REQUEST['ID'];
+            $id = $_REQUEST['IDp'];
             $Firstname = $_REQUEST['Firstname'];
             $Lastname = $_REQUEST['Lastname'];
             $Patientname = $Firstname.' '.$Lastname;

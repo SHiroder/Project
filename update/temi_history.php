@@ -10,8 +10,9 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 // Check connection
 if (isset($_POST["temi_id"])) {
     // Prepare and bind the insert statement
-    $stmt = $conn->prepare("INSERT INTO temi_history (Temi_ID) VALUES (?)");
+    $stmt = $conn->prepare("INSERT INTO temi_history (temi_id) VALUES (?)");
     $stmt->bind_param("s", $temiId);
+
 
     // Set the parameter values and execute the statement
     $temiId = $_POST["temi_id"];
@@ -31,5 +32,6 @@ if (isset($_POST["temi_id"])) {
 }
 
 $conn->close();
+
 
 ?>

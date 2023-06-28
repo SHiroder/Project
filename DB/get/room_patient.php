@@ -16,8 +16,7 @@ if ($conn->connect_error) {
 }
 
 // prepare and execute the SQL query
-$sql = "SELECT * FROM patient INNER JOIN room ON patient.Room_ID_p = room.ID WHERE patient.switch_status = 1";
-
+$sql = "SELECT * FROM patient INNER JOIN room ON patient.Room_ID_p = room.ID ";
 $result = $conn->query($sql);
 
 // create JSON response
@@ -31,8 +30,7 @@ if ($result->num_rows > 0) {
     // loop through the data and add to the response
     while ($row = $result->fetch_assoc()) {
         $data = array();
-        $data["IDp"] = $row["IDp"];
-        $data["Patientname"] = $row["Patientname"];
+        $data["ID"] = $row["ID"];
         $data["Room"] = $row["Room"];
         // add more fields as needed
         array_push($response["data"], $data);

@@ -1,50 +1,55 @@
 <?php
 header("Content-Type: application/json");
 
-// connect to the database
+// Connect to the database
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "registor";
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// check connection
+// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// get ID parameter from the request URL
-$Get = $_GET['ID'];
+// Get ID parameter from the request URL
+$Temi_ID = $_GET['Temi_ID'] ?? '';
 
-// prepare and execute the SQL query
-$sql = "SELECT * FROM health_box_symptoms WHERE ID=$Get";
-$result = $conn->query($sql);
+if (!empty($Temi_ID)) {
+    // Prepare and execute the SQL query
+    $sql = "SELECT * FROM health_box_symptoms WHERE Temi_ID = $Temi_ID";
+    $result = $conn->query($sql);
 
-// create JSON response
-$response = array();
+    // Create JSON response
+    $response = array();
 
-if ($result->num_rows > 0) {
-    $response["success"] = true;
-    $response["message"] = "Data found";
-    $response["data"] = array();
+    if ($result && $result->num_rows > 0) {
+        $response["success"] = true;
+        $response["message"] = "Data found";
+        $response["data"] = array();
 
-    // loop through the data and add to the response
-    while ($row = $result->fetch_assoc()) {
-        $data = array();
-        $data["ID"] = $row["ID"];
-        $data["Temi_ID"] = $row["Temi_ID"];
-        $data["Status_symptoms"] = $row["Status_symptoms"];
-        // add more fields as needed
-        array_push($response["data"], $data);
+        // Loop through the data and add to the response
+        while ($row = $result->fetch_assoc()) {
+            $data = array();
+            $data["ID"] = $row["ID"];
+            $data["Temi_ID"] = $row["Temi_ID"];
+            $data["Status_symptoms"] = $row["Status_symptoms"];
+            // Add more fields as needed
+            array_push($response["data"], $data);
+        }
+    } else {
+        $response["success"] = false;
+        $response["message"] = "No data found";
     }
 } else {
     $response["success"] = false;
-    $response["message"] = "No data found";
+    $response["message"] = "Invalid ID parameter";
 }
 
-// return the response as JSON
+// Return the response as JSON
 echo json_encode($response);
 
-// close the database connection
+// Close the database connection
 $conn->close();
 ?>

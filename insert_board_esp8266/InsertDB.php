@@ -31,6 +31,15 @@
 
     if ($result) {
         echo "OK";
+        $stmt2 = $conn->prepare("INSERT INTO healthbox_history(Patient_ID,Healthbox_ID) 
+                                            VALUES(:Patient_ID,:Healthbox_ID)");
+        $stmt2->bindParam(':Patient_ID', $Patient_ID, PDO::PARAM_STR);
+        $stmt2->bindParam(':Healthbox_ID', $Healthbox_ID, PDO::PARAM_STR);
+
+        $Patient_ID = isset($_POST['Patient_ID']) ? $_POST['Patient_ID'] : ''; 
+        $Healthbox_ID = isset($_POST['Healthbox_ID']) ? $_POST['Healthbox_ID'] : ''; 
+
+        $result2 = $stmt2->execute();
     } else {
         // Handle error here
     }
