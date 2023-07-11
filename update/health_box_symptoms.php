@@ -19,9 +19,13 @@ $sql = "UPDATE health_box_symptoms SET Status_symptoms = '$status' WHERE ID = '$
 
 if ($conn->query($sql) === TRUE) {
   echo "Record updated successfully";
-  sleep(30);
+  sleep(20);
   $sql2 = "UPDATE health_box_symptoms SET Status_symptoms = 'IDLE' WHERE ID = '$id'";
   $conn->query($sql2);
+  $id--;
+  $sql3 = "UPDATE temi_location SET Status_success='IDLE' WHERE ID='$id'";
+  $conn->query($sql3);
+     
 } else {
   echo "Error updating record: " . $conn->error;
 }
