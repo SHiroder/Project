@@ -5,8 +5,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $input2 = $_POST['input2'];
   $input3 = $_POST['input3'];
   $input4 = $_POST['input4'];
-  $input5 = "Home base";
-
+  $hospitalID = $_POST['Caretaker']; // รับค่า Hospital ID ที่เลือกจากฟอร์ม
+  $temiID = 1; // กำหนดค่า Temi_ID เป็น 1
 
   $servername = "localhost";
   $username = "root";
@@ -19,37 +19,62 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     die("Connection failed: " . $conn->connect_error);
   }
 
-  // ใช้ parameterized query
-  $stmt = $conn->prepare("INSERT INTO room (input1) VALUES (?)");
-  $stmt->bind_param("ssssss", $input1);
-  $stmt = $conn->prepare("INSERT INTO room (input2) VALUES (?)");
-  $stmt->bind_param("ssssss", $input2);
-  $stmt = $conn->prepare("INSERT INTO room (input3) VALUES (?)");
-  $stmt->bind_param("ssssss", $input3);
-  $stmt = $conn->prepare("INSERT INTO room (input4) VALUES (?)");
-  $stmt->bind_param("ssssss", $input4);
-  $stmt = $conn->prepare("INSERT INTO room (input5) VALUES (?)");
-  $stmt->bind_param("ssssss", $input5);
-  $temiID = 1;
-  $stmt = $conn->prepare("INSERT INTO temi_location (Temi_ID, Status_success) VALUES (?, 'IDLE')");
-  $stmt->bind_param("i", $temiID);
-  $stmt = $conn->prepare("INSERT INTO temi_location (Temi_ID, Status_success) VALUES (?, 'IDLE')");
-  $stmt->bind_param("i", $temiID);
-  $stmt = $conn->prepare("INSERT INTO temi_location (Temi_ID, Status_success) VALUES (?, 'IDLE')");
-  $stmt->bind_param("i", $temiID);
-  $stmt = $conn->prepare("INSERT INTO temi_location (Temi_ID, Status_success) VALUES (?, 'IDLE')");
-  $stmt->bind_param("i", $temiID);
-  $stmt = $conn->prepare("INSERT INTO temi_location (Temi_ID, Status_success) VALUES (?, 'IDLE')");
-  $stmt->bind_param("i", $temiID);
+  $stmt = $conn->prepare("INSERT INTO room (Hospital_ID, Room) VALUES (?, ?)");
 
-
-  
-
-  if ($stmt->execute() === TRUE) {
-    echo "New record created successfully";
-  } else {
-    echo "Error: " . $stmt->error;
+  if (!empty($input1)) {
+    $stmt->bind_param("is", $hospitalID, $input1);
+    if ($stmt->execute()) {
+      echo "New record created successfully for Room 1";
+      $stmt = $conn->prepare("INSERT INTO temi_location (Temi_ID, Status_success) VALUES (?, 'IDLE')");
+      $stmt->bind_param("i", $temiID);
+      $stmt->execute();
+    } else {
+      echo "Error: " . $stmt->error;
+    }
   }
+
+  if (!empty($input2)) {
+    $stmt2 = $conn->prepare("INSERT INTO room (Hospital_ID, Room) VALUES (?, ?)");
+
+    $stmt2->bind_param("is", $hospitalID, $input2);
+    if ($stmt2->execute()) {
+      echo "New record created successfully for Room 2";
+      $stmt2 = $conn->prepare("INSERT INTO temi_location (Temi_ID, Status_success) VALUES (?, 'IDLE')");
+      $stmt2->bind_param("i", $temiID);
+      $stmt2->execute();
+    } else {
+      echo "Error: " . $stmt->error;
+    }
+  }
+
+  if (!empty($input3)) {
+    $stmt3 = $conn->prepare("INSERT INTO room (Hospital_ID, Room) VALUES (?, ?)");
+
+    $stmt3->bind_param("is", $hospitalID, $input3);
+    if ($stmt3->execute()) {
+      echo "New record created successfully for Room 3";
+      $stmt3 = $conn->prepare("INSERT INTO temi_location (Temi_ID, Status_success) VALUES (?, 'IDLE')");
+      $stmt3->bind_param("i", $temiID);
+      $stmt3->execute();
+    } else {
+      echo "Error: " . $stmt->error;
+    }
+  }
+
+  if (!empty($input4)) {
+    $stmt4 = $conn->prepare("INSERT INTO room (Hospital_ID, Room) VALUES (?, ?)");
+
+    $stmt4->bind_param("is", $hospitalID, $input4);
+    if ($stmt4->execute()) {
+      echo "New record created successfully for Room 4";
+      $stmt4 = $conn->prepare("INSERT INTO temi_location (Temi_ID, Status_success) VALUES (?, 'IDLE')");
+      $stmt4->bind_param("i", $temiID);
+      $stmt4->execute();
+    } else {
+      echo "Error: " . $stmt->error;
+    }
+  }
+  header("location: nurse.php");
 
   $stmt->close();
   $conn->close();

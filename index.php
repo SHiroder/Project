@@ -21,19 +21,16 @@ body, html {height: 100%}
   background:#fff;
   border-radius: 10px;
   position:absolute;
-  top:0;
+  height: auto;
+  top:100px;
   left:50%;
   transform: translate(-50%,-50%) ; 
   text-align:center;
   padding: 0 30px 30px;
   color:#333;
-  visibility: hidden;
-  transition: transfrom 0.4s, top 0.4s;
+
 }
-.open-popup{visibility:visible;
-top:50% ;
-transform:translate(-50%,-50% scale(1));
-}
+
 </style>
 </head>
 <body>
@@ -43,21 +40,22 @@ transform:translate(-50%,-50% scale(1));
   <h1 style="font-family:verdana; text-align:center;"></h1>
   </div>
   <div class="w3-display-middle">
-    <h1 class="w3-jumbo w3-animate-top">LOG IN</h1>
+    
     <hr class="w3-border-grey" style="margin:auto;width:40%"><br/>
-    <button type ="submit" class = "btn" onclick="openPopup()" style ="background : white; width:100% ; Height:60%;">CLICK</button>
     <div class ="popup" id = "popup">
       
     <div class="form-container sign-in-container">
     <form action="signin_db.php" method="post">
-			<h1>Sign in</h1>
+    <br />
+    <h1 class="w3-jumbo w3-animate-top" style="top:100%">LOG IN</h1>
+    <br />
 			
       <input type="text"  name="Username"  placeholder="Username" style ="background : white; width:100% ; Height:60%;"> <br />  <br /> 
 			<input type="password"  name="Password" placeholder="Password" style ="background : white; width:100% ; Height:60%;"> <br />  <br /> 
 
 			<a href="register.php">Forgot your password?</a> <br />  <br /> 
             
-      <button type="submit" name="signin" class="btn btn-primary" style ="background : blue,0.2; width:100% ; Height:60%;">Sign In</button> <br /> 
+      <button type="submit" name="signin" class="btn btn-primary" style ="background : blue,0.2; width:100% ; Height:60%;">Login Now</button> <br /> 
 		</form>
 	</div>  
         <button type = "button"onclick="closePopup()" style ="background : red,0.5,0.8,0.5; width:100% ; Height:60%;">Return</button>
@@ -69,14 +67,6 @@ transform:translate(-50%,-50% scale(1));
   </div>
 </div>
 
-<script>
-  let popup = document.getElementById("popup")
-  function openPopup(){
-    popup.classList.add("open-popup");
-  }
-  function closePopup(){
-    popup.classList.remove("open-popup");
-  }
 </script>
 </body>
 </html>

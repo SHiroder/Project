@@ -14,7 +14,7 @@
 
     if(isset($_REQUEST['btn_update'])) {
         try {
-            $id = $_REQUEST['IDp'];
+            
             $Firstname = $_REQUEST['Firstname'];
             $Lastname = $_REQUEST['Lastname'];
             $Patientname = $Firstname.' '.$Lastname;
@@ -27,13 +27,14 @@
             $Caretaker = $_REQUEST['Caretaker'];
             $Birthdate = $_REQUEST['Birthdate'];
             $Telephone = $_REQUEST['Telephone'];
-
-            $update_stmt = $conn->prepare("UPDATE patient SET Firstname = ?, Lastname = ?, Patientname = ?, Gender = ?, Height = ?, Weight = ?, BMI = ?, Age = ?, Room = ?, Caretaker = ?, Birthdate = ?, Telephone = ? WHERE ID = ?");
-            $update_stmt->bind_param('ssssssssssssi', $Firstname, $Lastname, $Patientname, $Gender, $Height, $Weight, $BMI, $Age, $Room, $Caretaker, $Birthdate, $Telephone, $id);
-
+            $switch_status = $_REQUEST['switch_status']; 
+    
+            $update_stmt = $conn->prepare("UPDATE patient SET Firstname = ?, Lastname = ?, Patientname = ?, Gender = ?, Height = ?, Weight = ?, BMI = ?, Age = ?, Room_ID_p = ?, Nurse_ID = ?, Birthdate = ?, Telephone = ?, switch_status = ? WHERE IDp = ?");
+            $update_stmt->bind_param('ssssssssssssii', $Firstname, $Lastname, $Patientname, $Gender, $Height, $Weight, $BMI, $Age, $Room, $Caretaker, $Birthdate, $Telephone, $switch_status, $id); // เพิ่มพารามิเตอร์ $switch_status และแก้ไขประเภทข้อมูลเป็น ii
+    
             if($update_stmt->execute()) {
                 $updateMsg = "File update successfully...";
-                header("refresh:2;nurse.php");
+                header("refresh:1;nurse.php");
             } else {
                 $errorMsg = "Failed to update data.";
             }
@@ -41,7 +42,8 @@
             echo $e->getMessage();
         }
     }
-?> 
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -126,7 +128,7 @@ div {
 
             <label for="lastname" class="form-label">ชื่อผู้ป่วย</label>
 
-            <input type="text" class="form-control" name="Lastname" aria-describedby="Lastname" value ="<?php echo $row['Patientname']; ?>"disabled>
+            <input type="text" class="form-control" name="Lastname" aria-describedby="Lastname" value ="<?php echo $row['Patientname']; ?>"readonly>
         </div>
         </div>
         <div class="form-group">
@@ -166,17 +168,22 @@ div {
         </div>
         <div class="form-group">
             <label for="gender" class="form-label">ห้อง</label>
-            <input type="text" class="form-control" name="Room" aria-describedby="Height" value ="<?php echo $row['Room'] ;?>" require>
+            <input type="text" class="form-control" name="Room" aria-describedby="Height" value ="<?php echo $row['Room_ID_p'] ;?>" require>
         </div>
         </div>
         <div class="form-group">
             <label for="gender" class="form-label">ผู้ดูแล</label>
-            <input type="text" class="form-control" name="Caretaker" aria-describedby="Height" value ="<?php echo $row['Caretaker'] ;?>" require>
+            <input type="text" class="form-control" name="Caretaker" aria-describedby="Height" value ="<?php echo $row['Nurse_ID'] ;?>" require>
         </div>
         </div>
         <div class="form-group">
             <label for="birthdate" class="form-label">วันเกิด</label>
             <input type="text" class="form-control" name="Birthdate" aria-describedby="birthdate" value ="<?php echo $row['Birthdate'] ;?>"require>
+        </div>
+        </div>
+        <div class="form-group">
+            <label for="birthdate" class="form-label">สถานะการยังรักษาอยู่ (0 = ออกจากโรงพยาบาลแล้ว | 1 = ยังรักษาอยู่)</label>
+            <input type="text" class="form-control" name="switch_status" aria-describedby="birthdate" value ="<?php echo $row['switch_status'] ;?>"require>
         </div>
         </div>
         <div class="form-group">

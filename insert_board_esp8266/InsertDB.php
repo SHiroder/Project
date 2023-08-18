@@ -40,6 +40,11 @@
         $Healthbox_ID = isset($_POST['Healthbox_ID']) ? $_POST['Healthbox_ID'] : ''; 
 
         $result2 = $stmt2->execute();
+        $newTimestamp = date("Y-m-d H:i:s"); // Get the current date and time in the desired format
+
+ 
+        $sql2 = "UPDATE patient SET Time_now= '$newTimestamp' WHERE IDp = $Patient_ID";
+        $conn->query($sql2);
     } else {
         // Handle error here
     }

@@ -13,13 +13,13 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
-
+sleep(6);
 $sql = "UPDATE healthbox SET Status_Onoff='$status' WHERE ID=$id";
 
 if ($conn->query($sql) === TRUE) {
   echo "Record updated successfully";
 
-  sleep(10);
+  sleep(2);
   $status2 = "Off";
   $sql2 = "UPDATE healthbox SET Status_Onoff='$status2' WHERE ID=$id";
   if ($conn->query($sql2) === TRUE) {
