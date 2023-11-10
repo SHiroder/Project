@@ -1,3 +1,4 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php 
 
 session_start();
@@ -16,12 +17,8 @@ if (isset($_POST['signup_pa'])) {
     $Birthdate = $_POST['Birthdate'];
     $Telephone = $_POST['Telephone'];
 
-    if (empty($Firstname)) {
-        $_SESSION['error'] = 'กรุณากรอกชื่อ';
-        header("location: registor.php");
-    } else if (empty($Lastname)) {
-        $_SESSION['error'] = 'กรุณากรอกนามสกุล';
-        header("location: registor.php");
+    if (empty($Firstname) || empty($Lastname)) {
+        $_SESSION['login_success'] =true;
     } else {
         try {
             
@@ -58,10 +55,20 @@ if (isset($_POST['signup_pa'])) {
                         '1' 
                     )";
         
-                    if(mysqli_query($conn,$sql)){
-                        echo '<script> alert("Success")</script>';
-                        header('Refresh:2; url=nurse.php');
-                    }else{
+                    if (mysqli_query($conn, $sql)) {
+                        echo '<script>
+                        Swal.fire({
+                            icon: "success",
+                            title: "เข้าระบบสำเร็จ",
+                            ,
+                        });
+                        setTimeout(function() {
+                            window.location.href = "nurse.php"; // ย้ายไปที่หน้า nurse.php
+                        }, 1000); // รอเวลา 1 วินาทีก่อนย้ายหน้า
+                    </script>';
+                      
+                    }
+                    else{
                         echo '<script> alert("Failed")</script>';
                     }
 
@@ -92,9 +99,20 @@ if (isset($_REQUEST['delete_id'])) {
     $deleteStmt->execute();
     
     // ลบข้อมูลในตาราง patient_history_of_hospital_use
+    $_SESSION['login_success'] = true;
+    if (isset($_SESSION['login_success'])) {
+        echo '<script>
+            Swal.fire({ 
+                icon: "success",
+                title: "เปิดการทำงาน"
+            });
+            
+        </script>';
+        
+    }
+
     
-    
-    header("location: nurse.php");
+   
 }
 
 
@@ -163,10 +181,13 @@ box-sizing: border-box;
 font-family: 'Poppins', sans-serif;
 
 }
+input[type=text],[type=date],[type=int]:focus {
+    border: 3px solid #555;
+}
 body{
 height: 100vh;
 width: 100%;
-background: linear-gradient(115deg, #8bc34a 5%, #f9fbe7 95%);
+background: linear-gradient(115deg, #660033 5%, #CC00FF	95%);
 zoom: 75%
 }
 .show-btn{
@@ -376,6 +397,7 @@ z-index:1;
         padding:20px;
         box-sizing:border-box;
     }
+    
     .popup2 .overlay{
         width: 5000px;
 height: 50000px;
@@ -389,7 +411,7 @@ position:fixed;
     }
     .popup2 .content{
         position: absolute;
-        top:0%;
+        top:50%;
         left:50%;
         transform:translate(-50%,-50%);
         background:#fff;
@@ -518,8 +540,32 @@ visibility:visible;
 top:50% ;
 transform:translate(-50%,-50% scale(1));
 }
+.popup5{
+        width: 100%;
+height: 100%;
+background:rgba(255,255,255);
+border-radius: 10px;
+position:fixed;
+top: -100px;
+left:50%;
+transform: translate(-50%,-50%) ; 
+text-align:center;
+padding: 0 30px 30px;
+color:#000;
+visibility: hidden;
+transition: transfrom 0.4s, top 0.4s;
+align-self: start;
+z-index: 1;
+
+}
+.open-popup5{
+visibility:visible;
+
+top:50% ;
+transform:translat
+}
 .popup3{
-        width: 50%;
+        width: 100%;
 height: Auto;
 position: fixed;
 background:#999;
@@ -560,7 +606,7 @@ align-self: start;
 }
 .open-popup2{
 visibility:visible;
-top:650px ;
+top:750px ;
 transform:translate(-50%,-50% scale(1));
 }
 .btn{
@@ -592,6 +638,7 @@ transform-origin:0 0;
 transition-timing-function: cubic-bezier(0.5,1.6,0.4,0.7);
 
 }
+
 
 .btn1::before{
 transform:scaleX(1);
@@ -700,7 +747,7 @@ transform: translateX(16px);
 box-shadow: 0 0 1px #66BB6A;
 }
 .popup4 .overlay{
-        width: 5000px;
+        width: 50000px;
 height: 50000px;
 position:fixed;
         top:-620px;
@@ -723,12 +770,80 @@ position:fixed;
         padding:20px;
         box-sizing:border-box;
     }
+    .popup5 .overlay{
+        width: 5000px;
+height: 50000px;
+position:fixed;
+        top:-620px;
+        left:-1000px;
+        
+        height:1000vh;
+        background:rgba(0,0,0,0.93);
+        z-index:1;
+    }
+    .popup5 .content {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #fff;
+        width: 70%;
+        height: 750px;
+        z-index: 2;
+        text-align: center;
+        padding: 20px;
+        box-sizing: border-box;
+        border-radius: 10px;
+    }
+    
+        .button-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .button-container a {
+        text-decoration: none;
+        margin-right: 10px;
+    }
+
+    .bt {
+        display: inline-block;
+        padding: 10px 20px;
+        border: 1px solid #000;
+        border-radius: 5px;
+    }
+
+    .bt i {
+        margin-right: 5px;
+    }
+
+    .edit-button {
+        background: #99FFFF;
+    }
+
+    .delete-button {
+        background: #FF3333;
+    }
+
+    .logout-button {
+        background: blue;
+    }
+    .white-icon {
+    color: white;
+}
+
 
 </style>
 </head>
 
 <body style="font-family:Segoe UI Black;">
-<nav class="navbar navbar-light bg-light p-3">
+
+<nav class="navbar navbar-light bg-light p-3 sticky-top" style="position: fixed; /* ติดตัว Navbar ไว้บน */
+    top: 0; /* ติดตัว Navbar ไว้บนด้านบนของหน้าเว็บ */
+    left: 0; /* ไม่ย้าย Navbar ไปด้านซ้ายหรือขวา */
+    right: 0; /* ไม่ย้าย Navbar ไปด้านซ้ายหรือขวา */
+    z-index: 1000; ">
     <div class="d-flex col-12 col-md-3 col-lg-2 mb-2 mb-lg-0 flex-wrap flex-md-nowrap justify-content-between">
         <a class="navbar-brand" href="nurse.php" style ="font-size: 30px;font-weight: bold;">
         ROBOT COVID-19
@@ -752,11 +867,12 @@ position:fixed;
         </div>
     </div>
 </nav>
-
-<div class="container-fluid">
+<br><br><br><br><br><br>
+<div class="container-fluid" >
     <div class="row">
-        <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" style="width: 20em; ">
+        <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" style="width: 18em;z-index: 100;position: fixed;top: 0;left: 0; ">
             <div class="position-sticky">
+                
                 <ul class="nav flex-column">
                     <li class="nav-item" ><br>
                     <span class="ml-2"></span>
@@ -796,9 +912,9 @@ position:fixed;
         </nav>
         </div>
         </div>
-        <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4 py-4">
+        <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4 py-4"  >
         
-            <div class="row my-4" style ="color=green">
+            <div class="row my-4" style ="color=green;">
                 <div class="col-12 col-md-6 col-lg-3 mb-4 mb-lg-0"style="width:49.3%;height:100%">
                     <div class="card">
                         <h5 class="card-header" style="text-align:center;background-color:#673ab7;color:white;">แสดงผลการทำงาน Temi</h5>
@@ -854,22 +970,25 @@ position:fixed;
                 </div>
             </div>
             
-            <div class="row" style="width: 100%;">
+            <div class="row" style="width: 100%; ">
                 <div class="col-12 col-xl-8 mb-4 mb-lg-0" style="width: 99.5%;">
                     <div class="card" >
                         <h5 class="card-header" style="text-align:center;background-color:#673ab7;color:white">ผู้ป่วย</h5>
                         <div class="card-body">
                             
                             <div class="table-responsive">
+                                
                             <table id="myTable" class="display" style="width: 100%;" active ="loadData()">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col"style="width: 5%;">ไอดี</th>
-                                        <th scope="col"style="width: 10%;">สำหรับหุ่นเดินไป</th>
-                                        <th scope="col"style="width: 30%;">ชิ่อผู้ป่วย</th>
+                            
+                                    <thead >
+                                    <tr >
+                                        
+                                        <th scope="col"style="width: 2%;">ไอดี</th>
+                                        <th scope="col"style="width: 8%;">สำหรับหุ่นเดินไป</th>
+                                        <th scope="col"style="width: 25%;">ชิ่อผู้ป่วย</th>
                                         <th scope="col"style="width: 10%;">ห้อง</th>
-                                        <th scope="col"style="width: 30%;">ผู้ดูแล</th>
-                                        <th scope="col"style="width: 20%;">ตรวจล่าสุด</th>
+                                        <th scope="col"style="width: 25%;">ผู้ดูแล</th>
+                                        <th scope="col"style="width: 10%;">ตรวจล่าสุด</th>
                                         <th scope="col"style="width: 10%;"></th>
                                         
 
@@ -894,12 +1013,22 @@ position:fixed;
                                         </td>
                                         <td style="background-color:#e0f7fa"><?php echo $row2['Patientname']; ?></td>                        
                                         <td><?php echo $row2['Room']; ?></td>  
-                                        <td style="background-color:#e0f7fa"><?php echo $row2['Fullname']; ?></td>  
-                                        <td><?php echo $row2['Time_now']; ?></td>            
+                                        <td style="background-color:#e0f7fa"><?php echo $row2['Fullname']; ?></td>
+                                          
+                                        <td><button type="submit"style="" onclick="openPopup5(<?php echo $row2['IDp']; ?>)"> <i class="fas fa-robot" title="คลิกเพื่อดูข้อมูลเพิ่มเติม"></i></button><br><?php echo $row2['Time_now']; ?>   </td>            
                                         <td style="background-color:#e0f7fa">
-                                            <a href="edit.php?edit_id=<?php echo $row2['IDp']; ?>" class="btn btn-danger" style="background:#99FFFF;">แก้ไขข้อมูล</a>
-                                            <a href="?delete_id=<?php echo $row2['IDp']; ?>" class="btn btn-danger" style="background:#FF3333;">ลบการใช้งาน</a>
-                                            <a href="?stop_id=<?php echo $row2['IDp']; ?>" class="btn btn-danger" style="background:blue">ผู้ป่วยออกจากโรงพยาบาล</a>
+                                        <a href="edit.php?edit_id=<?php echo $row2['IDp']; ?>" class="bt" style="background:#FFCC00  ; display: inline-block; border-radius: 10%;">
+                                            <i class="fas fa-edit white-icon" title="แก้ไขข้อมูล"></i> 
+                                        </a>
+
+                                        <a href="?delete_id=<?php echo $row2['IDp']; ?>" class="bt" style="background:#FF3333; display: inline-block; border-radius: 10%;">
+                                            <i class="fas fa-trash-alt white-icon" title="ลบการใช้งาน"></i> 
+                                        </a>
+
+                                        <a href="?stop_id=<?php echo $row2['IDp']; ?>" class="bt" style="background:blue; display: inline-block; border-radius: 10%;    ">
+                                            <i class="fas fa-sign-out-alt white-icon" title="ผู้ป่วยออกจากโรงพยาบาล"></i> 
+                                        </a>
+
                                             
                                         </td>                        
                                     </tr>
@@ -925,9 +1054,14 @@ position:fixed;
                                         <td style="background-color:#e0f7fa"><?php echo $row2['Fullname']; ?></td>  
                                         <td><?php echo $row2['Time_now']; ?></td>            
                                         <td style="background-color:#e0f7fa">
-                                            <a href="edit.php?edit_id=<?php echo $row2['IDp']; ?>" class="btn btn-danger" style="background:#99FFFF;">แก้ไขข้อมูล</a>
-                                            <a href="?delete_id=<?php echo $row2['IDp']; ?>" class="btn btn-danger" style="background:#FF3333;">ลบการใช้งาน</a>
-                                            <a href="?stop_id=<?php echo $row2['IDp']; ?>" class="btn btn-danger" style="background:blue">ผู้ป่วยออกจากโรงพยาบาล</a>
+                                        <a href="edit.php?edit_id=<?php echo $row2['IDp']; ?>" class="bt" style="background:#FFCC00  ; display: inline-block; border-radius: 10%;">
+                                            <i class="fas fa-edit white-icon" title="แก้ไขข้อมูล"></i> 
+                                        </a>
+
+                                        <a href="?delete_id=<?php echo $row2['IDp']; ?>" class="bt" style="background:#FF3333; display: inline-block; border-radius: 10%;">
+                                            <i class="fas fa-trash-alt white-icon" title="ลบการใช้งาน"></i> 
+                                        </a>
+
                                             
                                         </td>                        
                                     </tr>
@@ -978,7 +1112,13 @@ position:fixed;
     <div class = "content" style="border-radius: 10px;">
 
         <div class="form-container sign-in-container">
-    
+    <script>
+
+    $(document).ready(function() {
+    $('#myTable2').DataTable({
+        "order": [[3, "desc"]]  // เรียงลำดับตามคอลัมน์ที่ 3 (ได้รับล่าสุด) ในลำดับล่าสุด
+    });
+});</script>
             <legend ><h2 style="color: black;"><b>ประวัติจ่ายยา</b></h2></legend><br>
             <div class="row" style="width: 100%;">
                 <div class="col-12 col-xl-8 mb-4 mb-lg-0" style="width: 100%;">
@@ -1031,7 +1171,7 @@ position:fixed;
         <div class="form-container sign-in-container">
         
             <div class="container__child signup__form" style="width: 100%;;">
-        
+                <br>  <br> <br>                           
                 <div class="mb-3">
                     <input type="text" class="form-control" name="Firstname" aria-describedby="Firstname" placeholder="ชื่อ">
                 </div>
@@ -1113,6 +1253,155 @@ position:fixed;
     <button type = "button"onclick="closePopup4()" class="btn btn-primary" style ="background:green;">ปิด</button>
     <a href="?stop_id=<?php echo $row2['IDp']; ?>" class="btn btn-danger" style="background:blue">ผู้ป่วยออกจากโรงพยาบาล</a>
 </div>
+<button type="submit" style="" onclick="openPopup5(<?php echo $row2['IDp']; ?>)">
+    <i class="fas fa-robot" title="คลิกเพื่อดูข้อมูลเพิ่มเติม"></i>
+</button>
+
+<div class="popup5" id="popup5" style="top: 700px;">
+    <div class="overlay"></div>
+    <div class="content" style="border-radius: 10px;">
+        <div class="form-container sign-in-container">
+            <legend>
+                <h2 style="color: black;"><b style="color: black;">ข้อมูลผู้ป่วย</b></h2>
+            </legend>
+            <br>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <canvas id="myLineChart1" style="height:auto;width:auto"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <canvas id="myLineChart2" style="height:auto;width:auto"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class= "chart-container">
+                        <canvas id="myLineChart3" style="height:auto;width:auto"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+ <script>
+    // หา DOM elements สำหรับกราฟ
+    let chart1, chart2, chart3;
+    var ctx1 = document.getElementById('myLineChart1').getContext('2d');
+    chart1 = new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'ระดับออกซิเจนในเลือด',
+                data: [],
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                fill: false
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    var ctx2 = document.getElementById('myLineChart2').getContext('2d');
+    chart2 = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'ระดับชีพจร',
+                data: [],
+                borderColor: 'rgba(192, 75, 75, 1)',
+                borderWidth: 2,
+                fill: false
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    var ctx3 = document.getElementById('myLineChart3').getContext('2d');
+    chart3 = new Chart(ctx3, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'ระดับอุณหภูมิ',
+                data: [],
+                borderColor: 'rgba(75, 75, 192, 1)',
+                borderWidth: 2,
+                fill: false
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    function openPopup5(IDp) {
+        // เปิด popup5
+        popup5.classList.add("open-popup5");
+
+        // เรียกใช้งาน PHP script เพื่อดึงข้อมูลผู้ป่วย
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "fetch_patient_data.php?IDp=" + IDp, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var patientData = JSON.parse(xhr.responseText);
+                displayPatientData(patientData);
+            }
+        };
+        xhr.send();
+    }
+
+    function displayPatientData(data) {
+        // อัปเดตข้อมูลในกราฟ
+        chart1.data.labels = data.date_data;
+        chart1.data.datasets[0].data = data.spo2_data;
+        chart1.update();
+
+        chart2.data.labels = data.date_data;
+        chart2.data.datasets[0].data = data.pulse_data;
+        chart2.update();
+
+        chart3.data.labels = data.date_data;
+        chart3.data.datasets[0].data = data.temp_data;
+        chart3.update();
+    }
+
+    function closePopup5() {
+        // ปิด popup5
+        popup5.classList.remove("open-popup5");
+    }
+</script>
+
+
+        <button type="button" onclick="closePopup5()" class="btn btn-primary" style="background: red;width:auto">ปิด</button>
+    </div>
+</div>
+
+
+
+
 
                     <div class ="popup2" id = "popup2" >
 <div class = "overlay"></div>
@@ -1124,17 +1413,27 @@ position:fixed;
                 popup2.classList.add("open-popup2");
                 popup1.classList.remove("open-popup1");
                 popup3.classList.remove("open-popup3");
-            
+                popup5.classList.remove("open-popup5");
+                popup4.classList.remove("open-popup4");
 
             }
             let popup4 = document.getElementById("popup4")
             function openPopup4(){
                 popup4.classList.add("open-popup4");
-
+                popup1.classList.remove("open-popup1");
+                popup2.classList.remove("open-popup2");
+                popup3.classList.remove("open-popup3");
+                popup5.classList.remove("open-popup5");
+                
 
             }
+
             function closePopup2(){
                 popup2.classList.remove("open-popup2");
+
+            }
+            function closePopup5(){
+                popup5.classList.remove("open-popup5");
 
             }
             function changColor(){
@@ -1147,14 +1446,17 @@ position:fixed;
                             popup.classList.add("open-popup");
                             popup1.classList.remove("open-popup1");
                             popup3.classList.remove("open-popup3");
-                    
+                            popup5.classList.remove("open-popup5");
+                            popup4.classList.remove("open-popup4");
                         }
                         function closePopup(){
                             popup.classList.remove("open-popup");
                             popup1.classList.remove("open-popup1");
                             popup2.classList.remove("open-popup2");
                             popup3.classList.remove("open-popup3");
-            
+
+                            popup5.classList.remove("open-popup5");
+                            popup4.classList.remove("open-popup4");
                         }
                             
                         let popup1 = document.getElementById("popup1")
@@ -1164,6 +1466,8 @@ position:fixed;
                             popup.classList.remove("open-popup");
                             popup2.classList.remove("open-popup2");
                             popup3.classList.remove("open-popup3");
+                            popup5.classList.remove("open-popup5");
+                            popup4.classList.remove("open-popup4");
                         }
                         function closePopup1(){
                             popup1.classList.remove("open-popup1");
@@ -1188,6 +1492,8 @@ position:fixed;
                             popup.classList.remove("open-popup");
                             popup2.classList.remove("open-popup2");
                             popup1.classList.remove("open-popup1");
+                            popup5.classList.remove("open-popup5");
+                            popup4.classList.remove("open-popup4");
                         }
                         function closePopup3(){
                             popup3.classList.remove("open-popup3");
@@ -1200,7 +1506,7 @@ position:fixed;
                             popup3.classList.remove("open-popup3");
                         }
 
-    </script> 
+    </script>
                     <div class="form-container sign-in-container" >
             <legend ><h2 style="color: black;"><b>ประวัติตรวจวัด</b></h2></legend><br>
             <div class="row" style="width: 100%;">
@@ -1208,7 +1514,13 @@ position:fixed;
                     <div class="card" >
                         <h5 class="card-header" >ประวัติ</h5>
                         <div class="card-body">
-                            
+                        <script>
+                            $(document).ready(function() {
+                            $('#myTable1').DataTable({
+                                "order": [[4, "desc"]]  // เรียงลำดับตามคอลัมน์ที่ 3 (ได้รับล่าสุด) ในลำดับล่าสุด
+                            });
+
+                        });</script>
                             <div class="table-responsive">
                             <table id="myTable1" class="display" style="width: 100%;">
                                     <thead>
@@ -1264,12 +1576,8 @@ position:fixed;
         $(document).ready(function () {
             $("#myTable").DataTable();
     });
-    $(document).ready(function () {
-            $("#myTable1").DataTable();
-    });
-    $(document).ready(function () {
-            $("#myTable2").DataTable();
-    });
+
+
 </script>
 
 
